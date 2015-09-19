@@ -1,46 +1,23 @@
----
 language: python
-python: "2.7"
-
+python: '2.7'
 services:
-  - rabbitmq
-
-
+- rabbitmq
 before_install:
-  # Make sure everything's up to date.
-  - sudo apt-get install python-software-properties
-  - sudo add-apt-repository -y cloud-archive:icehouse
-  - sudo apt-get update -qq
-
-
+- sudo apt-get install python-software-properties
+- sudo add-apt-repository -y cloud-archive:icehouse
+- sudo apt-get update -qq
 install:
-  # Install Ansible.
-  - sudo pip install ansible
-
-  # Add ansible.cfg to pick up roles path.
-  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-
-  # Install required ansible roles
-  - ansible-galaxy install dguerri.openstack-keystone,2.0.0
-
-
+- sudo pip install ansible
+- '{ echo ''[defaults]''; echo ''roles_path = ../''; } >> ansible.cfg'
+- ansible-galaxy install dguerri.openstack-keystone,2.0.0
 script:
-  # Check the role/playbook's syntax.
-  - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
-
-  # Run the role/playbook with ansible-playbook.
-  - >
-    ansible-playbook -i tests/inventory tests/test.yml --connection=local
-    --sudo
-
-  # Test role idempotency
-  - >
-    ansible-playbook -i tests/inventory tests/test.yml -t glance
-    --connection=local --sudo | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
-
-  # Test Glance setup
-  - >
-    glance --os_auth_url="http://127.0.0.1:5000/v2.0" --os_tenant_name=demo
-    --os_password="demo password" --os_username=demo index
+- ansible-playbook -i tests/inventory tests/test.yml --syntax-check
+- |
+  ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
+- |
+  ansible-playbook -i tests/inventory tests/test.yml -t glance --connection=local --sudo | grep -q 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
+- |
+  glance --os_auth_url="http://127.0.0.1:5000/v2.0" --os_tenant_name=demo --os_password="demo password" --os_username=demo index
+notifications:
+  slack:
+    secure: kLC2RQ1IA15xgLJ2UXNS/Gkap9zW21GCvqQAVND1XNPjI7TO/z4tHKKQXPVqddkLE0SmHjq2wa8ZBbfyojgemJvJnVhzUd4PuuMIcKusWvH2Mp9q5xOZLnykwmzFFDY32cC2PHW7qWDtLYUPxIn/79gZ3U9n6lHEOtSDDpM+/dpJY/DMlrxmNEX243vwLpicS6fciZEm+jqArkmU1eX6pqaLk2lWGrOeRRkPxu4YGNExlXiRPlHg/CJrvEQiM57UGnRJIw5JoeIDPKamuc5Svp2NYxYNPRwg8PpYTOKTulGyYe4PCBFOSMIiyim6vUvks8yH0m052unZqoZ/2HK4sWjsYkLqWxNVQtCnrnKqIpicPFRJKY26fYQs1AzxTGOQT3yTNIc4MNav+CCu7pvmCkHwP8Vh90rvjE+N8B6+meeSATO5y9otk/lpqG4hCaYPCohTCagq8psEjsXX2vFLdNSDcjOXfG7+jC6Fu22lLP8TsAeOIy/COfXVOvLWS1bQlta999z+X+lepdQ9TBixefInQ2GIMmorXTjonxlXT71Ux9lL4jNOjQ2yfMEK37t0dmqdbbBlHF1q9oStxqA5uJGYkIp8S/GOVX/xtzrfFYO6037BWKsddfreDr5c1aSx75i2KzYqoWmXPdNsGLz0haR0Pq1Jj4axHORXPd3O4WE=
