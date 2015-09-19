@@ -45,15 +45,6 @@
       option:   bind_port
       value:    "{{ glance_port }}"
     - section:  DEFAULT
-      option:   rabbit_host
-      value:    "{{ glance_rabbit_hostname }}"
-    - section:  DEFAULT
-      option:   rabbit_userid
-      value:    "{{ glance_rabbit_username }}"
-    - section:  DEFAULT
-      option:   rabbit_password
-      value:    "{{ glance_rabbit_pass }}"
-    - section:  DEFAULT
       option:   log_file
       value:    "{{ glance_log_dir }}/api.log"
     - section:  keystone_authtoken
@@ -80,6 +71,31 @@
     - section:  paste_deploy
       option:   flavor
       value:    keystone
+    # RabbitMQ
+    - section: DEFAULT
+      option:  rabbit_userid
+      value:   "{{ glance_rabbit_userid }}"
+    - section: DEFAULT
+      option:  rabbit_password
+      value:   "{{ glance_rabbit_password }}"
+    - section: DEFAULT
+      option:  rabbit_virtual_host
+      value:   "{{ glance_rabbit_virtual_host }}"
+    - section: DEFAULT
+      option:  rabbit_retry_interval
+      value:   "{{ glance_rabbit_retry_interval }}"
+    - section: DEFAULT
+      option:  rabbit_host
+      value:   "{{ glance_rabbit_host }}"
+    - section: DEFAULT
+      option:  rabbit_port
+      value:   "{{ glance_rabbit_port }}"
+    - section: DEFAULT
+      option:  rabbit_hosts
+      value:   "{{ glance_rabbit_hosts }}"
+    - section: DEFAULT
+      option:  rabbit_ha_queues
+      value:   "{{ glance_rabbit_ha_queues }}"
   notify:
     - Restart Glance API
 

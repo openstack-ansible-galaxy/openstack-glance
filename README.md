@@ -24,7 +24,6 @@ For RHEL/CentOS, RHOSP or RDO repositories are needed.
 Role Variables
 --------------
 
-
 ### Glance (set by this role)
 
 | Name | Default value | Description |
@@ -39,12 +38,21 @@ Role Variables
 | `keystone_hostname` | `localhost` | Hostname/IP address where the keystone service runs |
 | `keystone_port` | `5000` | Keystone service port |
 | `keystone_protocol` | `http` | Desired glance protocol (http/https) - WiP, do not use |
-| `rabbit_hostname` | `localhost` | Hostname/IP address where the RabbitMQ service runs |
-| `rabbit_username` | `rabbit_username_default` | RabbitMQ username for glance |
-| `rabbit_pass` | `rabbit_pass_default` | RabbitMQ password for glance |
 | `glance_hostname` | `localhost` | Hostname/IP used internally during configuration. localhost is usually ok |
 | `glance_log_dir` | `/var/log/glance` | Log directory (it must exist) |
 
+### RabbitMQ (must exist)
+
+| Name | Default value | Description | Note |
+|---  |---  |---  |--- |
+| `glance_rabbit_userid` | `rabbit_username_default` | RabbitMQ username for console auth ||
+| `glance_rabbit_password` | `rabbit_pass_default` | RabbitMQ password for console auth ||
+| `glance_rabbit_virtual_host`| `/` | RabbitMQ virtual host for console auth ||
+| `glance_rabbit_retry_interval` | `1` | Frequency to retry connecting to RabbitMQ ||
+| `glance_rabbit_host` | `localhost` | The RabbitMQ broker address where a single node is used ||
+| `glance_rabbit_port` | `5672` | The RabbitMQ broker port where a single node is used ||
+| `glance_rabbit_hosts` | `$rabbit_host:$rabbit_port` | RabbitMQ HA cluster host:port pairs ||
+| `glance_rabbit_ha_queues` | `False` | Use HA queues in RabbitMQ (x-ha-policy: all) ||
 
 Dependencies
 ------------
