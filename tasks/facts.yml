@@ -32,5 +32,3 @@
 - name: Set service facts
   set_fact: glance_registry_service="openstack-glance-registry"
   when: ansible_os_family == 'RedHat'
-
-

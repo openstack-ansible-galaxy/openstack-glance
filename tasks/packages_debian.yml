@@ -26,4 +26,3 @@
 
 - name: Install Glance client
   apt: name=python-glanceclient state=present
-

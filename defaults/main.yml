@@ -36,6 +36,6 @@ keystone_protocol: http
 glance_database_url: sqlite:////var/lib/glance/glance.sqlite
 
 # RabbitMQ
-rabbit_hostname: localhost
-rabbit_username: rabbit_username_default
-rabbit_pass: rabbit_pass_default
+glance_rabbit_hostname: localhost
+glance_rabbit_username: rabbit_username_default
+glance_rabbit_pass: rabbit_pass_default
