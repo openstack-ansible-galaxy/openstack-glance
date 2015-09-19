@@ -37,7 +37,7 @@
   service: name={{ glance_registry_service }} state=reloaded
 
 - name: Sync Glance database
-  shell: glance-manage db_sync
+  glance_manage: action=db_sync
   sudo: yes
   sudo_user: glance
   notify:
