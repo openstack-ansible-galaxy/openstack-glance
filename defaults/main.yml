@@ -44,3 +44,6 @@ glance_rabbit_host: localhost
 glance_rabbit_port: 5672
 glance_rabbit_hosts: "{{ glance_rabbit_host }}:{{ glance_rabbit_port }}"
 glance_rabbit_ha_queues: False
+
+# Misc
+glance_boostrap: true
