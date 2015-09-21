@@ -43,3 +43,4 @@
   notify:
     - Restart Glance API
     - Restart Glance registry
+  when: glance_boostrap
