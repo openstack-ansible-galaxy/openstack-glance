@@ -46,4 +46,4 @@ glance_rabbit_hosts: "{{ glance_rabbit_host }}:{{ glance_rabbit_port }}"
 glance_rabbit_ha_queues: False
 
 # Misc
-glance_boostrap: true
+glance_bootstrap: true
