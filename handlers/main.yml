@@ -19,10 +19,10 @@
 #
 
 - name: Restart Glance API
-  service: name={{ glance_api_service }} state=restarted
+  service: name={{ glance_api_service }} state=restarted enabled=yes
 
 - name: Restart Glance registry
-  service: name={{ glance_registry_service }} state=restarted
+  service: name={{ glance_registry_service }} state=restarted enabled=yes
 
 - name: Sync Glance database
   glance_manage: action=db_sync
