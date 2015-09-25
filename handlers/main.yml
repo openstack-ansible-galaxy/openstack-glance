@@ -18,23 +18,11 @@
 # limitations under the License.
 #
 
-- name: Start Glance API
-  service: name={{ glance_api_service }} state=started
-
-- name: Start Glance registry
-  service: name={{ glance_registry_service }} state=started
-
 - name: Restart Glance API
-  service: name={{ glance_api_service }} state=restarted
+  service: name={{ glance_api_service }} state=restarted enabled=yes
 
 - name: Restart Glance registry
-  service: name={{ glance_registry_service }} state=restarted
-
-- name: Reload Glance API
-  service: name={{ glance_api_service }} state=reloaded
-
-- name: Reload Glance registry
-  service: name={{ glance_registry_service }} state=reloaded
+  service: name={{ glance_registry_service }} state=restarted enabled=yes
 
 - name: Sync Glance database
   glance_manage: action=db_sync
