@@ -25,6 +25,8 @@ glance_pass: glance_pass_default
 glance_port: 9292
 glance_protocol: http
 glance_log_dir: /var/log/glance
+glance_log_debug: False
+glance_log_verbose: False
 
 # Keystone
 keystone_admin_port: 35357
