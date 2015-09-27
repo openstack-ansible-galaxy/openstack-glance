@@ -44,6 +44,13 @@
     - section:  DEFAULT
       option:   log_file
       value:    "{{ glance_log_dir }}/api.log"
+    - section:  DEFAULT
+      option:   debug
+      value:    "{{ glance_log_debug }}"
+    - section:  DEFAULT
+      option:   verbose
+      value:    "{{ glance_log_verbose }}"
+    # Keystone
     - section:  keystone_authtoken
       option:   auth_uri
       value:    "{{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_port }}/v2.0"
