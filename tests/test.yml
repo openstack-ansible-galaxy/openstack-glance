@@ -3,7 +3,7 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - role: dguerri.openstack-keystone
+    - role: openstack-keystone
       keystone_admin_bind_host: 127.0.0.1
       keystone_bind_host: 127.0.0.1
       keystone_admin_token: "os token"
