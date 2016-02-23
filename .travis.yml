@@ -22,7 +22,7 @@ install:
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 
   # Install required ansible roles
-  - ansible-galaxy install openstack-ansible-galaxy.openstack-keystone
+  - ansible-galaxy install -r tests/requirements.yml
 
 
 script:

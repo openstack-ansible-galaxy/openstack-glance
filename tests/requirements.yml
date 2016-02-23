@@ -1,0 +1,3 @@
+- name: openstack-keystone
+  src: https://github.com/abelboldu/openstack-keystone
+  version: origin/features/liberty
