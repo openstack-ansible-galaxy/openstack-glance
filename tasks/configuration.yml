@@ -121,5 +121,14 @@
     - section:  paste_deploy
       option:   flavor
       value:    keystone
+    - section:  glance_store
+      option:   stores
+      value:    glance.store.filesystem.Store,glance.store.http.Store
+    - section:  glance_store
+      option:   filesystem_store_datadir
+      value:    /var/lib/glance/images/
+    - section:  glance_store
+      option:   default_store
+      value:    file    
   notify:
     - Restart Glance registry
