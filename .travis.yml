@@ -8,15 +8,13 @@ services:
   - rabbitmq
 
 before_install:
-  # Make sure everything's up to date.
   - sudo apt-get install python-software-properties
-  - sudo add-apt-repository -y cloud-archive:liberty
   - sudo apt-get update -qq
 
 
 install:
   # Install Ansible.
-  - sudo pip install ansible==1.9.4
+  - sudo pip install ansible
 
   # Add ansible.cfg to pick up roles path.
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
