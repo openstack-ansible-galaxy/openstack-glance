@@ -4,8 +4,8 @@
   remote_user: root
   roles:
     - role: openstack-keystone
-      keystone_admin_bind_host: 127.0.0.1
-      keystone_bind_host: 127.0.0.1
+      keystone_admin_bind_host: localhost
+      keystone_bind_host: localhost
       keystone_admin_token: "os token"
       keystone_tenants:
         - { name: admin, description: "Admin tenant" }
@@ -29,6 +29,10 @@
         - { name: neutron, service_type: network }
         - { name: nova, service_type: compute }
       keystone_endpoints:
+        - service_name: keystone
+          public_url: "http://localhost:5000/v2.0"
+          internal_url: "http://localhost:5000/v2.0"
+          admin_url: "http://localhost:35357/v2.0"
         - service_name: keystone
           public_url: "http://127.0.0.1:5000/v2.0"
           internal_url: "http://127.0.0.1:5000/v2.0"
