@@ -23,6 +23,7 @@ install:
   - ansible-galaxy install -r tests/requirements.yml
 
 
+
 script:
   # Check the role/playbook's syntax.
   - ansible-playbook -i tests/inventory_local tests/test.yml --syntax-check
@@ -41,5 +42,5 @@ script:
 
   # Test Glance setup
   - >
-    glance --os_auth_url="http://127.0.0.1:5000/v2.0" --os_tenant_name=demo
-    --os_password="demo password" --os_username=demo image-list
+    openstack --os-auth-url="http://127.0.0.1:5000/v2.0" --os-project-name=demo
+    --os-password="demo password" --os-username=demo image list

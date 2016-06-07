@@ -20,13 +20,12 @@
 
 - name: Install Glance server
   apt:
-    name: glance
+    name: "{{ item }}"
     state: present
+  with_items:
+    - glance
+    - python-glanceclient
+    - python-openstackclient
   notify:
     - Restart Glance API
     - Restart Glance registry
-
-- name: Install Glance client
-  apt:
-    name: python-glanceclient
-    state: present
