@@ -18,19 +18,13 @@
 #
 
 - name: Set service facts
-  set_fact: glance_api_service="glance-api"
+  set_fact:
+    glance_api_service: "glance-api"
+    glance_registry_service: "glance-registry"
   when: ansible_os_family == 'Debian'
 
 - name: Set service facts
-  set_fact: glance_registry_service="glance-registry"
-  when: ansible_os_family == 'Debian'
-
-- name: Set service facts
-  set_fact: glance_api_service="openstack-glance-api"
+  set_fact:
+    glance_api_service: "openstack-glance-api"
+    glance_registry_service: "openstack-glance-registry"
   when: ansible_os_family == 'RedHat'
-
-- name: Set service facts
-  set_fact: glance_registry_service="openstack-glance-registry"
-  when: ansible_os_family == 'RedHat'
-
-
