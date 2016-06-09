@@ -1,46 +1,64 @@
 ---
-language: python
-python: "2.7"
-dist: trusty
 sudo: required
+
+env:
+  - distribution: centos
+    version: 7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  - distribution: ubuntu
+    version: 14.04
+    init: /sbin/init
+    run_opts: ""
+  - distribution: ubuntu
+    version: 16.04
+    init: /lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
 
 services:
   - rabbitmq
+  - docker
 
 before_install:
-  - sudo apt-get install python-software-properties
-  - sudo apt-get update -qq
-
+  # Pull container
+  - 'sudo docker pull ${distribution}:${version}'
+  # Customize container
+  - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
+  # Clone dependencies
+  - git clone --depth=1 https://github.com/openstack-ansible-galaxy/openstack-keystone.git ../openstack-keystone
 
 install:
-  # Install Ansible.
-  - sudo pip install ansible==2.0.2.0
+  # Install requirements
+  - sudo apt-get update -qq
+  - sudo apt-get install python-pip -y
+  - sudo pip install ansible
+  - sudo ansible-galaxy install -r tests/requirements.yml
 
-  # Add ansible.cfg to pick up roles path.
-  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-
-  # Install required ansible roles
-  - ansible-galaxy install -r tests/requirements.yml
-
-
-
+  # TODO:  expose rabbitmq port to conatiners with dockerhost option
 script:
-  # Check the role/playbook's syntax.
-  - ansible-playbook -i tests/inventory_local tests/test.yml --syntax-check
-
-  # Run the role/playbook with ansible-playbook.
+  - container_id=$(mktemp)
+  # Run container in detached state
   - >
-    ansible-playbook -i tests/inventory_local tests/test.yml --connection=local
-    --sudo
+    sudo docker run --add-host=docker:`/sbin/ip route|awk '/default/ { print  $3}'` --detach
+    --volume=/etc/ansible/roles:/etc/ansible/roles:rw ${run_opts}
+    --volume="${PWD}":/etc/ansible/roles/openstack-glance:rw ${run_opts}
+    ${distribution}-${version}:ansible "${init}" > "${container_id}"
 
-  # Test role idempotency
+  # Ansible syntax check.
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/openstack-glance/tests/test_travis.yml --syntax-check'
+
+  # Test role.
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/openstack-glance/tests/test_travis.yml'
+
+  # DEBUG idempotence
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/glance/glance-api.log'
+
+  # Test role idempotence.
   - >
-    ansible-playbook -i tests/inventory_local tests/test.yml -t glance
-    --connection=local --sudo | grep -q 'changed=0.*failed=0'
+    sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/openstack-glance/tests/test_travis.yml
+    | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
 
-  # Test Glance setup
-  - >
-    openstack --os-auth-url="http://127.0.0.1:5000/v2.0" --os-project-name=demo
-    --os-password="demo password" --os-username=demo image list
+  # Clean up
+  - 'sudo docker stop "$(cat ${container_id})"'
