@@ -6,7 +6,7 @@ env:
     version: 7
     init: /usr/lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-  - distribution: ubuntu
+  - distribution: ubuntu-upstart
     version: 14.04
     init: /sbin/init
     run_opts: ""
@@ -31,7 +31,7 @@ install:
   # Install requirements
   - sudo apt-get update -qq
   - sudo apt-get install python-pip -y
-  - sudo pip install ansible
+  - sudo pip install ansible==2.0.2.0
   - sudo ansible-galaxy install -r tests/requirements.yml
 
   # TODO:  expose rabbitmq port to conatiners with dockerhost option
@@ -48,10 +48,7 @@ script:
   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/openstack-glance/tests/test_travis.yml --syntax-check'
 
   # Test role.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/openstack-glance/tests/test_travis.yml'
-
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ps uaxf'
-  - 'sudo docker exec -u glance --tty "$(cat ${container_id})" env TERM=xterm /usr/bin/python /usr/bin/glance-api --log-file=/var/log/glance/glance-api.log --config-file=/etc/glance/glance-api.conf'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook -vvvv /etc/ansible/roles/openstack-glance/tests/test_travis.yml'
 
   # Test role idempotence.
   - >

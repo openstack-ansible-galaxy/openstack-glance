@@ -32,6 +32,11 @@ keystone_hostname: localhost
 keystone_port: 5000
 keystone_protocol: http
 
+# Demo user for sanity  check
+demo_project: demo
+demo_user: demo
+demo_pass: glance_pass_default
+
 # Database
 glance_database_url: sqlite:////var/lib/glance/glance.sqlite
 

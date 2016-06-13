@@ -76,6 +76,7 @@
       glance_hostname: localhost
       glance_pass: "glance password"
       keystone_hostname: localhost
+      demo_pass: "demo password"
       rabbit_hostname: dockerhost
       rabbit_username: guest
       rabbit_pass: "guest"
