@@ -50,8 +50,8 @@ script:
   # Test role.
   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/openstack-glance/tests/test_travis.yml'
 
-  # DEBUG idempotence
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/glance/glance-api.log'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ps uaxf'
+  - 'sudo docker exec -u glance --tty "$(cat ${container_id})" env TERM=xterm /usr/bin/python /usr/bin/glance-api --log-file=/var/log/glance/glance-api.log --config-file=/etc/glance/glance-api.conf'
 
   # Test role idempotence.
   - >
