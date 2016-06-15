@@ -12,6 +12,5 @@ ADD init-fake.conf /etc/init/fake-container-events.conf
 RUN rm /usr/sbin/policy-rc.d; \
 	rm /sbin/initctl; dpkg-divert --rename --remove /sbin/initctl
 
-
 # Install Ansible inventory file
 RUN echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
