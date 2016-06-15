@@ -19,7 +19,7 @@ def start(config, box, name, ip, netmask = "255.255.255.0")
   config.vm.provision :shell,
                       inline: "test -d /root/.ssh || cp -r /home/vagrant/.ssh /root"
   config.vm.provision :shell,
-                      inline: "sudo sed -i 's/ALL=NOPASSWD:ALL/ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers"
+                      inline: "sudo sed -i 's/ALL=NOPASSWD:ALL/ALL=(ALL:ALL) NOPASSWD: ALL/g' /etc/sudoers"
 
 
   File.open(INVENTORY_PATH, 'a') do |fd|

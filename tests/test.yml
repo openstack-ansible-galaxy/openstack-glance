@@ -81,6 +81,7 @@
       glance_hostname: 127.0.0.1
       glance_pass: "glance password"
       keystone_hostname: 127.0.0.1
+      demo_pass: "demo password"
       rabbit_hostname: 127.0.0.1
       rabbit_username: guest
       rabbit_pass: "guest"
