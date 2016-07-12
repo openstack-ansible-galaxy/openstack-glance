@@ -19,21 +19,21 @@
 #
 
 - name: Configure Glance API database
-  ini_file: >
-    dest=/etc/glance/glance-api.conf
-    section=database
-    option=connection
-    value="{{ glance_database_url }}"
+  ini_file:
+    dest: /etc/glance/glance-api.conf
+    section: database
+    option: connection
+    value: "{{ glance_database_url }}"
   notify:
     - Sync Glance database
     - Restart Glance API
 
 - name: Configure Glance API
-  ini_file: >
-    dest=/etc/glance/glance-api.conf
-    section="{{ item.section }}"
-    option="{{ item.option }}"
-    value="{{ item.value }}"
+  ini_file:
+    dest: /etc/glance/glance-api.conf
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
   with_items:
     - section:  DEFAULT
       option:   rpc_backend
@@ -81,21 +81,21 @@
     - Restart Glance API
 
 - name: Configure Glance registry database
-  ini_file: >
-    dest=/etc/glance/glance-registry.conf
-    section=database
-    option=connection
-    value="{{ glance_database_url }}"
+  ini_file:
+    dest: /etc/glance/glance-registry.conf
+    section: database
+    option: connection
+    value: "{{ glance_database_url }}"
   notify:
     - Sync Glance database
     - Restart Glance registry
 
 - name: Configure Glance registry
-  ini_file: >
-    dest=/etc/glance/glance-registry.conf
-    section="{{ item.section }}"
-    option="{{ item.option }}"
-    value="{{ item.value }}"
+  ini_file:
+    dest: /etc/glance/glance-registry.conf
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
   with_items:
     - section:  DEFAULT
       option:   log_file
@@ -129,6 +129,6 @@
       value:    /var/lib/glance/images/
     - section:  glance_store
       option:   default_store
-      value:    file    
+      value:    file
   notify:
     - Restart Glance registry
