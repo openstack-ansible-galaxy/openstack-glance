@@ -1,89 +1,92 @@
 ---
 
 - hosts: all
-  remote_user: root
   become: True
+
   pre_tasks:
+    - block:
+        - name: Update local apt cache
+          apt:
+            update_cache: True
 
-    - name: Install Ubuntu Cloud archive keyring (Debian)
-      when: ansible_os_family == 'Debian'
-      apt:
-        name: ubuntu-cloud-keyring
-        state: present
+        - name: Install Ubuntu Cloud archive keyring (Debian)
+          apt:
+            name: 'ubuntu-cloud-keyring'
+            state: present
 
-    - name: Enable OpenStack (Debian)
+        - name: Enable OpenStack (Debian)
+          apt_repository:
+            repo: 'deb http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/mitaka main'
+            state: present
       when: ansible_os_family == 'Debian'
-      apt_repository:
-        repo: 'deb http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/mitaka main'
-        state: present
-        update_cache: yes
 
     - name: Enable OpenStack (RedHat)
-      when: ansible_os_family == 'RedHat'
       yum:
-        name: "{{ item }}"
+        name: '{{ item }}'
         state: present
-        update_cache: yes
       with_items:
-        - centos-release-openstack-mitaka
-        - policycoreutils-python
+        - 'centos-release-openstack-mitaka'
+        - 'policycoreutils-python'
+      when: ansible_os_family == 'RedHat'
 
     # Workaround for selinux errors when using sqlite DB
     - name: Set permissive SElinux for httpd domain
-      command: semanage permissive -a httpd_t
-      when: ansible_os_family == "RedHat" and (ansible_selinux.mode is defined) and (ansible_selinux.mode == "enforcing")
+      selinux_permissive:
+        name: 'httpd_t'
+        permissive: True
+      when:
+        - ansible_selinux
+        - ansible_virtualization_type != 'docker'
 
   roles:
     - role: openstack-keystone
-      keystone_admin_bind_host: localhost
-      keystone_bind_host: localhost
-      keystone_admin_token: "os token"
+      keystone_admin_bind_host: 'localhost'
+      keystone_bind_host: 'localhost'
+      keystone_admin_token: 'os token'
       keystone_tenants:
-        - { name: admin, description: "Admin tenant" }
-        - { name: service, description: "Service tenant" }
-        - { name: demo, description: "Demo tenant"  }
+        - {name: 'admin', description: 'Admin tenant'}
+        - {name: 'service', description: 'Service tenant'}
+        - {name: 'demo', description: 'Demo tenant'}
       keystone_users:
-        - { name: admin, password: "admin password", tenant: admin }
-        - { name: demo, password: "demo password", tenant: demo }
-        - { name: glance, password: "glance password", tenant: service }
-        - { name: neutron, password: "neutron password", tenant: service }
-        - { name: nova, password: "nova password", tenant: service }
+        - {name: 'admin', password: 'admin password', tenant: 'admin'}
+        - {name: 'demo', password: 'demo password', tenant: 'demo'}
+        - {name: 'glance', password: 'glance password', tenant: 'service'}
+        - {name: 'neutron', password: 'neutron password', tenant: 'service'}
+        - {name: 'nova', password: 'nova password', tenant: 'service'}
       keystone_roles:
-        - { name: admin, user: admin, tenant: admin }
-        - { name: _member_, user: demo, tenant: demo  }
-        - { name: admin, user: glance, tenant: service  }
-        - { name: admin, user: neutron, tenant: service  }
-        - { name: admin, user: nova, tenant: service  }
+        - {name: 'admin', user: 'admin', tenant: 'admin'}
+        - {name: '_member_', user: 'demo', tenant: 'demo'}
+        - {name: 'admin', user: 'glance', tenant: 'service'}
+        - {name: 'admin', user: 'neutron', tenant: 'service'}
+        - {name: 'admin', user: 'nova', tenant: 'service'}
       keystone_services:
-        - { name: keystone, service_type: identity }
-        - { name: glance, service_type: image }
-        - { name: neutron, service_type: network }
-        - { name: nova, service_type: compute }
+        - {name: 'keystone', service_type: 'identity'}
+        - {name: 'glance', service_type: 'image'}
+        - {name: 'neutron', service_type: 'network'}
+        - {name: 'nova', service_type: 'compute'}
       keystone_endpoints:
-        - service_name: keystone
-          public_url: "http://localhost:5000/v2.0"
-          internal_url: "http://localhost:5000/v2.0"
-          admin_url: "http://localhost:35357/v2.0"
-        - service_name: keystone
-          public_url: "http://127.0.0.1:5000/v2.0"
-          internal_url: "http://127.0.0.1:5000/v2.0"
-          admin_url: "http://127.0.0.1:35357/v2.0"
-        - service_name: glance
-          public_url: "http://127.0.0.1:9292/"
-          internal_url: "http://127.0.0.1:9292/"
-          admin_url: "http://127.0.0.1:9292/"
-        - service_name: nova
-          public_url: "http://127.0.0.1:8774/v2/%(tenant_id)s"
-          internal_url: "http://127.0.0.1:8774/v2/%(tenant_id)s"
-          admin_url: "http://127.0.0.1:8774/v2/%(tenant_id)s"
+        - service_name: 'keystone'
+          public_url: 'http://localhost:5000/v2.0'
+          internal_url: 'http://localhost:5000/v2.0'
+          admin_url: 'http://localhost:35357/v2.0'
+        - service_name: 'keystone'
+          public_url: 'http://127.0.0.1:5000/v2.0'
+          internal_url: 'http://127.0.0.1:5000/v2.0'
+          admin_url: 'http://127.0.0.1:35357/v2.0'
+        - service_name: 'glance'
+          public_url: 'http://127.0.0.1:9292/'
+          internal_url: 'http://127.0.0.1:9292/'
+          admin_url: 'http://127.0.0.1:9292/'
+        - service_name: 'nova'
+          public_url: 'http://127.0.0.1:8774/v2/%(tenant_id)s'
+          internal_url: 'http://127.0.0.1:8774/v2/%(tenant_id)s'
+          admin_url: 'http://127.0.0.1:8774/v2/%(tenant_id)s'
 
     - role: openstack-glance
-      glance_hostname: 127.0.0.1
-      glance_pass: "glance password"
-      keystone_hostname: 127.0.0.1
-      demo_pass: "demo password"
-      rabbit_hostname: 127.0.0.1
-      rabbit_username: guest
-      rabbit_pass: "guest"
-      tags:
-        - glance
+      glance_hostname: '127.0.0.1'
+      glance_pass: 'glance password'
+      keystone_hostname: '127.0.0.1'
+      demo_pass: 'demo password'
+      rabbit_hostname: '127.0.0.1'
+      rabbit_username: 'guest'
+      rabbit_pass: 'guest'
