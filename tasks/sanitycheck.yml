@@ -4,10 +4,10 @@
   shell: >-
     openstack
     --os-auth-url {{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_port }}/v2.0
-    --os-project-name "{{ demo_project }}"
-    --os-username "{{ demo_user }}"
+    --os-project-name '{{ demo_project }}'
+    --os-username '{{ demo_user }}'
     --os-auth-type password
-    --os-password "{{ demo_pass }}"
+    --os-password '{{ demo_pass }}'
     image list
   register: image_list_test
   changed_when: image_list_test.rc != 0
