@@ -1,46 +1,77 @@
 ---
 
+- include: test_common.yml
+
 - hosts: all
   become: True
 
-  pre_tasks:
-    - block:
-        - name: Update local apt cache
-          apt:
-            update_cache: True
-
-        - name: Install Ubuntu Cloud archive keyring (Debian)
-          apt:
-            name: 'ubuntu-cloud-keyring'
-            state: present
-
-        - name: Enable OpenStack (Debian)
-          apt_repository:
-            repo: 'deb http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/mitaka main'
-            state: present
+  roles:
+    - role: mysql
+      mysql_root_password: 'mysqlpassword'
+      mysql_bind_address: 0.0.0.0
+      mysql_innodb_file_per_table: 'innodb_file_per_table'
+      mysql_packages:
+        - mariadb-client
+        - mariadb-server
+        - python-mysqldb
+      mysql_databases:
+        - name: 'keystone'
+        - name: 'glance'
+      mysql_users:
+        - name: 'keystone'
+          password: 'keystonepassword'
+          priv: 'keystone.*:ALL'
+          host: '%'
+        - name: 'keystone'
+          password: 'keystonepassword'
+          priv: 'keystone.*:ALL'
+          host: 'localhost'
+        - name: 'glance'
+          password: 'glancepassword'
+          priv: 'glance.*:ALL'
+          host: '%'
+        - name: 'glance'
+          password: 'glancepassword'
+          priv: 'glance.*:ALL'
+          host: 'localhost'
       when: ansible_os_family == 'Debian'
 
-    - name: Enable OpenStack (RedHat)
-      yum:
-        name: '{{ item }}'
-        state: present
-      with_items:
-        - 'centos-release-openstack-mitaka'
-        - 'policycoreutils-python'
+    - role: mysql
+      mysql_root_password: 'mysqlpassword'
+      mysql_bind_address: 0.0.0.0
+      mysql_innodb_file_per_table: 'innodb_file_per_table'
+      mysql_daemon: 'mariadb'
+      # mysql_socket: '/var/lib/mysql/mysql.sock'
+      mysql_log_error: '/var/log/mariadb/mariadb.log'
+      mysql_syslog_tag: 'mariadb'
+      mysql_pid_file: '/var/run/mariadb/mariadb.pid'
+      mysql_databases:
+        - name: 'keystone'
+        - name: 'glance'
+      mysql_users:
+        - name: 'keystone'
+          password: 'keystonepassword'
+          priv: 'keystone.*:ALL'
+          host: '%'
+        - name: 'keystone'
+          password: 'keystonepassword'
+          priv: 'keystone.*:ALL'
+          host: 'localhost'
+        - name: 'glance'
+          password: 'glancepassword'
+          priv: 'glance.*:ALL'
+          host: '%'
+        - name: 'glance'
+          password: 'glancepassword'
+          priv: 'glance.*:ALL'
+          host: 'localhost'
       when: ansible_os_family == 'RedHat'
 
-    # Workaround for selinux errors when using sqlite DB
-    - name: Set permissive SElinux for httpd domain
-      selinux_permissive:
-        name: 'httpd_t'
-        permissive: True
-      when:
-        - ansible_selinux
-        - ansible_virtualization_type != 'docker'
-
-  roles:
     - role: openstack-keystone
+      keystone_database_url: 'mysql+pymysql://keystone:keystonepassword@localhost/keystone'
+      keystone_run_sanity_check: yes
       keystone_admin_bind_host: 'localhost'
+      keystone_admin_password: 'admin password'
       keystone_bind_host: 'localhost'
       keystone_admin_token: 'os token'
       keystone_tenants:
@@ -83,6 +114,7 @@
           admin_url: 'http://127.0.0.1:8774/v2/%(tenant_id)s'
 
     - role: openstack-glance
+      glance_database_url: 'mysql+pymysql://glance:glancepassword@localhost/glance'
       glance_hostname: '127.0.0.1'
       glance_pass: 'glance password'
       keystone_hostname: '127.0.0.1'
