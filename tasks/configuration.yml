@@ -63,16 +63,34 @@
       option: identity_uri
       value: '{{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_admin_port }}'
     - section: keystone_authtoken
+      option: auth_url
+      value: '{{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_admin_port }}'
+    - section: keystone_authtoken
       option: auth_uri
-      value: '{{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_port }}/v2.0'
+      value: '{{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_port }}/v3'
+    - section: keystone_authtoken
+      option: project_domain_name
+      value: default
+    - section: keystone_authtoken
+      option: user_domain_name
+      value: default
+    - section: keystone_authtoken
+      option: memcached_servers
+      value: '{{ keystone_hostname }}:11211'
     - section: keystone_authtoken
       option: admin_tenant_name
       value: service
     - section: keystone_authtoken
-      option: admin_user
+      option: auth_type
+      value: password
+    - section: keystone_authtoken
+      option: auth_version
+      value: v3
+    - section: keystone_authtoken
+      option: username
       value: '{{ glance_user }}'
     - section: keystone_authtoken
-      option: admin_password
+      option: password
       value: '{{ glance_pass }}'
     - section: paste_deploy
       option: flavor
@@ -108,7 +126,7 @@
       value: '{{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_admin_port }}'
     - section: keystone_authtoken
       option: auth_uri
-      value: '{{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_port }}/v2.0'
+      value: '{{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_port }}/v3'
     - section: keystone_authtoken
       option: admin_tenant_name
       value: service
