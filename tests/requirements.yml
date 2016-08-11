@@ -9,4 +9,4 @@
 - src: 'https://github.com/openstack-ansible-galaxy/rabbitmq.git'
 
 - src: 'https://github.com/openstack-ansible-galaxy/openstack-keystone'
-  version: 'features/mitaka'
+  version: 'origin/features/mitaka'
