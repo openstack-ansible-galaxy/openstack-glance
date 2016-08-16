@@ -4,7 +4,6 @@
 
 - hosts: all
   become: True
-
   roles:
     - role: mysql
       mysql_root_password: 'mysqlpassword'
@@ -69,7 +68,7 @@
 
     - role: openstack-keystone
       keystone_database_url: 'mysql+pymysql://keystone:keystonepassword@localhost/keystone'
-      keystone_run_sanity_check: yes
+      # keystone_run_sanity_check: yes
       keystone_admin_bind_host: 'localhost'
       keystone_admin_password: 'admin password'
       keystone_bind_host: 'localhost'
@@ -97,28 +96,24 @@
         - {name: 'nova', service_type: 'compute'}
       keystone_endpoints:
         - service_name: 'keystone'
-          public_url: 'http://localhost:5000/v2.0'
-          internal_url: 'http://localhost:5000/v2.0'
-          admin_url: 'http://localhost:35357/v2.0'
-        - service_name: 'keystone'
-          public_url: 'http://127.0.0.1:5000/v2.0'
-          internal_url: 'http://127.0.0.1:5000/v2.0'
-          admin_url: 'http://127.0.0.1:35357/v2.0'
+          public_url: 'http://localhost:5000/v3'
+          internal_url: 'http://localhost:5000/v3'
+          admin_url: 'http://localhost:35357/v3'
         - service_name: 'glance'
-          public_url: 'http://127.0.0.1:9292/'
-          internal_url: 'http://127.0.0.1:9292/'
-          admin_url: 'http://127.0.0.1:9292/'
+          public_url: 'http://localhost:9292/'
+          internal_url: 'http://localhost:9292/'
+          admin_url: 'http://localhost:9292/'
         - service_name: 'nova'
-          public_url: 'http://127.0.0.1:8774/v2/%(tenant_id)s'
-          internal_url: 'http://127.0.0.1:8774/v2/%(tenant_id)s'
-          admin_url: 'http://127.0.0.1:8774/v2/%(tenant_id)s'
+          public_url: 'http://localhost:8774/v2.1/%(tenant_id)s'
+          internal_url: 'http://localhost:8774/v2.1/%(tenant_id)s'
+          admin_url: 'http://localhost:8774/v2.1/%(tenant_id)s'
 
     - role: openstack-glance
       glance_database_url: 'mysql+pymysql://glance:glancepassword@localhost/glance'
-      glance_hostname: '127.0.0.1'
+      glance_hostname: 'localhost'
       glance_pass: 'glance password'
-      keystone_hostname: '127.0.0.1'
+      keystone_hostname: 'localhost'
       demo_pass: 'demo password'
-      rabbit_hostname: '127.0.0.1'
+      rabbit_hostname: 'localhost'
       rabbit_username: 'guest'
       rabbit_pass: 'guest'

@@ -3,11 +3,14 @@
 - name: SANITY CHECK List glance images
   shell: >-
     openstack
-    --os-auth-url {{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_port }}/v2.0
+    --os-identity-api-version 3
+    --os-auth-url {{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_port }}/v3
     --os-project-name '{{ demo_project }}'
     --os-username '{{ demo_user }}'
     --os-auth-type password
     --os-password '{{ demo_pass }}'
+    --os-user-domain-id default
+    --os-project-domain-id default
     image list
   register: image_list_test
   changed_when: image_list_test.rc != 0
