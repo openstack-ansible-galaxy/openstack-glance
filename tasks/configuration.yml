@@ -46,13 +46,16 @@
       value: '{{ glance_port }}'
     - section: DEFAULT
       option: rabbit_host
-      value: '{{ rabbit_hostname }}'
+      value: '{{ openstack_glance_rabbit_hostname }}'
     - section: DEFAULT
       option: rabbit_userid
-      value: '{{ rabbit_username }}'
+      value: '{{ openstack_glance_rabbit_username }}'
     - section: DEFAULT
       option: rabbit_password
-      value: '{{ rabbit_pass }}'
+      value: '{{ openstack_glance_rabbit_password }}'
+    - section: DEFAULT
+      option: rabbit_virtual_host
+      value: '{{ openstack_glance_rabbit_virtual_host }}'
     - section: DEFAULT
       option: log_file
       value: '{{ glance_log_dir }}/api.log'
