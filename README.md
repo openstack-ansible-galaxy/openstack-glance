@@ -39,9 +39,9 @@ Role Variables
 | `keystone_hostname` | `localhost` | Hostname/IP address where the keystone service runs |
 | `keystone_port` | `5000` | Keystone service port |
 | `keystone_protocol` | `http` | Desired glance protocol (http/https) - WiP, do not use |
-| `rabbit_hostname` | `localhost` | Hostname/IP address where the RabbitMQ service runs |
-| `rabbit_username` | `rabbit_username_default` | RabbitMQ username for glance |
-| `rabbit_pass` | `rabbit_pass_default` | RabbitMQ password for glance |
+| `openstack_glance_rabbit_hostname` | `localhost` | Hostname/IP address where the RabbitMQ service runs |
+| `openstack_glance_rabbit_username` | `rabbit_username_default` | RabbitMQ username for glance |
+| `openstack_glance_rabbit_password` | `rabbit_pass_default` | RabbitMQ password for glance |
 | `glance_hostname` | `localhost` | Hostname/IP used internally during configuration. localhost is usually ok |
 | `glance_log_dir` | `/var/log/glance` | Log directory (it must exist) |
 
@@ -61,9 +61,9 @@ Example Playbook
           glance_hostname: glance
           glance_pass: "{{ GLANCE_PASS }}"
           keystone_hostname: keystone
-          rabbit_hostname: rabbitmq
-          rabbit_username: glance
-          rabbit_pass: "{{ RABBIT_GLANCE_PASS }}"
+          openstack_glance_rabbit_hostname: rabbitmq
+          openstack_glance_rabbit_username: glance
+          openstack_glance_rabbit_password: "{{ RABBIT_GLANCE_PASS }}"
 
 ---
 

@@ -41,6 +41,7 @@ demo_pass: glance_pass_default
 glance_database_url: sqlite:////var/lib/glance/glance.sqlite
 
 # RabbitMQ
-rabbit_hostname: localhost
-rabbit_username: rabbit_username_default
-rabbit_pass: rabbit_pass_default
+openstack_glance_rabbit_hostname: localhost
+openstack_glance_rabbit_username: rabbit_username_default
+openstack_glance_rabbit_password: rabbit_pass_default
+openstack_glance_rabbit_virtual_host: /
