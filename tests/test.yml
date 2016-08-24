@@ -5,6 +5,15 @@
 - hosts: all
   become: True
   roles:
+    - role: rabbitmq
+      rabbitmq_plugins:
+        - 'rabbitmq_management'
+      rabbitmq_tcp_address: '0.0.0.0'
+      rabbitmq_users:
+        - vhost: '/'
+          user: 'guest'
+          password: 'guest'
+
     - role: mysql
       mysql_root_password: 'mysqlpassword'
       mysql_bind_address: 0.0.0.0
