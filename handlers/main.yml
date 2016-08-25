@@ -20,32 +20,32 @@
 
 - name: Start Glance API
   service:
-    name: "{{ glance_api_service }}"
+    name: "{{ openstack_glance_api_service }}"
     state: started
 
 - name: Start Glance registry
   service:
-    name: "{{ glance_registry_service }}"
+    name: "{{ openstack_glance_registry_service }}"
     state: started
 
 - name: Restart Glance API
   service:
-    name: "{{ glance_api_service }}"
+    name: "{{ openstack_glance_api_service }}"
     state: restarted
 
 - name: Restart Glance registry
   service:
-    name: "{{ glance_registry_service }}"
+    name: "{{ openstack_glance_registry_service }}"
     state: restarted
 
 - name: Reload Glance API
   service:
-    name: "{{ glance_api_service }}"
+    name: "{{ openstack_glance_api_service }}"
     state: reloaded
 
 - name: Reload Glance registry
   service:
-    name: "{{ glance_registry_service }}"
+    name: "{{ openstack_glance_registry_service }}"
     state: reloaded
 
 - name: Sync Glance database

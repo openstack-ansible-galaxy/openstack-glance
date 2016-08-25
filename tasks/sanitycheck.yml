@@ -4,11 +4,11 @@
   shell: >-
     openstack
     --os-identity-api-version 3
-    --os-auth-url {{ keystone_protocol }}://{{ keystone_hostname }}:{{ keystone_port }}/v3
-    --os-project-name '{{ demo_project }}'
-    --os-username '{{ demo_user }}'
+    --os-auth-url {{ openstack_glance_keystone_protocol }}://{{ openstack_glance_keystone_hostname }}:{{ openstack_glance_keystone_port }}/v3
+    --os-project-name '{{ openstack_glance_demo_project }}'
+    --os-username '{{ openstack_glance_demo_user }}'
     --os-auth-type password
-    --os-password '{{ demo_pass }}'
+    --os-password '{{ openstack_glance_demo_pass }}'
     --os-user-domain-id default
     --os-project-domain-id default
     image list

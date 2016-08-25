@@ -29,21 +29,21 @@ Role Variables
 
 | Name | Default value | Description |
 |---  |---  |---  |
-| `glance_database_url` | `sqlite:////var/lib/glance/glance.sqlite` | Database URI |
-| `glance_user` | `glance` | Admin user for the image service as defined on Keystone |
-| `glance_pass` | `glance_pass_default` | Password for the image service as defined on Keystone |
-| `glance_bind_host` | `0.0.0.0` | IP address glance API will bind to |
-| `glance_port` | `9292` | Desired glance service port |
-| `glance_protocol` | `http` | Desired glance protocol (http/https) - WiP, do not use. |
-| `keystone_admin_port` | `35357` | Keystone admin service port |
-| `keystone_hostname` | `localhost` | Hostname/IP address where the keystone service runs |
-| `keystone_port` | `5000` | Keystone service port |
-| `keystone_protocol` | `http` | Desired glance protocol (http/https) - WiP, do not use |
+| `openstack_glance_database_url` | `sqlite:////var/lib/glance/glance.sqlite` | Database URI |
+| `openstack_glance_user` | `glance` | Admin user for the image service as defined on Keystone |
+| `openstack_glance_pass` | `glance_pass_default` | Password for the image service as defined on Keystone |
+| `openstack_glance_bind_host` | `0.0.0.0` | IP address glance API will bind to |
+| `openstack_glance_port` | `9292` | Desired glance service port |
+| `openstack_glance_protocol` | `http` | Desired glance protocol (http/https) - WiP, do not use. |
+| `openstack_glance_keystone_admin_port` | `35357` | Keystone admin service port |
+| `openstack_glance_keystone_hostname` | `localhost` | Hostname/IP address where the keystone service runs |
+| `openstack_glance_keystone_port` | `5000` | Keystone service port |
+| `openstack_glance_keystone_protocol` | `http` | Desired glance protocol (http/https) - WiP, do not use |
 | `openstack_glance_rabbit_hostname` | `localhost` | Hostname/IP address where the RabbitMQ service runs |
 | `openstack_glance_rabbit_username` | `rabbit_username_default` | RabbitMQ username for glance |
 | `openstack_glance_rabbit_password` | `rabbit_pass_default` | RabbitMQ password for glance |
-| `glance_hostname` | `localhost` | Hostname/IP used internally during configuration. localhost is usually ok |
-| `glance_log_dir` | `/var/log/glance` | Log directory (it must exist) |
+| `openstack_glance_hostname` | `localhost` | Hostname/IP used internally during configuration. localhost is usually ok |
+| `openstack_glance_log_dir` | `/var/log/glance` | Log directory (it must exist) |
 
 
 Dependencies
@@ -57,10 +57,10 @@ Example Playbook
     - hosts: glance001
       roles:
         - role: openstack-glance
-          glance_database_url: "mysql://{{ MYSQL_GLANCE_USER }}:{{ MYSQL_GLANCE_PASS }}@{{ DATABASE_HOSTNAME }}/{{ MYSQL_GLANCE_DB }}"
-          glance_hostname: glance
-          glance_pass: "{{ GLANCE_PASS }}"
-          keystone_hostname: keystone
+          openstack_glance_database_url: "mysql://{{ MYSQL_GLANCE_USER }}:{{ MYSQL_GLANCE_PASS }}@{{ DATABASE_HOSTNAME }}/{{ MYSQL_GLANCE_DB }}"
+          openstack_glance_hostname: glance
+          openstack_glance_pass: "{{ GLANCE_PASS }}"
+          openstack_glance_keystone_hostname: keystone
           openstack_glance_rabbit_hostname: rabbitmq
           openstack_glance_rabbit_username: glance
           openstack_glance_rabbit_password: "{{ RABBIT_GLANCE_PASS }}"
