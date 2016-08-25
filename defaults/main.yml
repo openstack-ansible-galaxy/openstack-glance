@@ -19,26 +19,26 @@
 #
 
 # Glance
-glance_bind_host: 0.0.0.0
-glance_user: glance
-glance_pass: glance_pass_default
-glance_port: 9292
-glance_protocol: http
-glance_log_dir: /var/log/glance
+openstack_glance_bind_host: 0.0.0.0
+openstack_glance_user: glance
+openstack_glance_pass: glance_pass_default
+openstack_glance_port: 9292
+openstack_glance_protocol: http
+openstack_glance_log_dir: /var/log/glance
 
 # Keystone
-keystone_admin_port: 35357
-keystone_hostname: localhost
-keystone_port: 5000
-keystone_protocol: http
+openstack_glance_keystone_admin_port: 35357
+openstack_glance_keystone_hostname: localhost
+openstack_glance_keystone_port: 5000
+openstack_glance_keystone_protocol: http
 
-# Demo user for sanity  check
-demo_project: demo
-demo_user: demo
-demo_pass: glance_pass_default
+# Demo user for sanity check
+openstack_glance_demo_project: demo
+openstack_glance_demo_user: demo
+openstack_glance_demo_pass: glance_pass_default
 
 # Database
-glance_database_url: sqlite:////var/lib/glance/glance.sqlite
+openstack_glance_database_url: sqlite:////var/lib/glance/glance.sqlite
 
 # RabbitMQ
 openstack_glance_rabbit_hostname: localhost
