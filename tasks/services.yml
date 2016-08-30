@@ -1,0 +1,10 @@
+---
+
+- name: Start Glance services
+  service:
+    enabled: True
+    name: '{{ item }}'
+    state: started
+  with_items:
+    - '{{ openstack_glance_api_service }}'
+    - '{{ openstack_glance_registry_service }}'
