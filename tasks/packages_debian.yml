@@ -26,6 +26,3 @@
     - glance
     - python-glanceclient
     - python-openstackclient
-  notify:
-    - Restart Glance API
-    - Restart Glance registry

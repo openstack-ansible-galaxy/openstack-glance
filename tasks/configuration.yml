@@ -18,22 +18,14 @@
 # limitations under the License.
 #
 
-- name: Configure Glance API database
-  ini_file:
-    dest: /etc/glance/glance-api.conf
-    section: database
-    option: connection
-    value: '{{ openstack_glance_database_url }}'
-  notify:
-    - Sync Glance database
-    - Restart Glance API
-
 - name: Configure Glance API
   ini_file:
     dest: /etc/glance/glance-api.conf
     section: '{{ item.section }}'
     option: '{{ item.option }}'
     value: '{{ item.value }}'
+  notify:
+    - Restart Glance API
   with_items:
     - section: DEFAULT
       option: rpc_backend
@@ -62,15 +54,27 @@
     - section: DEFAULT
       option: verbose
       value: True
+    - section: database
+      option: connection
+      value: '{{ openstack_glance_database_url }}'
     - section: keystone_authtoken
       option: identity_uri
-      value: '{{ openstack_glance_keystone_protocol }}://{{ openstack_glance_keystone_hostname }}:{{ openstack_glance_keystone_admin_port }}'
+      value: >-
+        {{- openstack_glance_keystone_protocol }}://
+        {{- openstack_glance_keystone_hostname }}:
+        {{- openstack_glance_keystone_admin_port }}
     - section: keystone_authtoken
       option: auth_url
-      value: '{{ openstack_glance_keystone_protocol }}://{{ openstack_glance_keystone_hostname }}:{{ openstack_glance_keystone_admin_port }}'
+      value: >-
+        {{- openstack_glance_keystone_protocol }}://
+        {{- openstack_glance_keystone_hostname }}:
+        {{- openstack_glance_keystone_admin_port }}
     - section: keystone_authtoken
       option: auth_uri
-      value: '{{ openstack_glance_keystone_protocol }}://{{ openstack_glance_keystone_hostname }}:{{ openstack_glance_keystone_port }}/v3'
+      value: >-
+        {{- openstack_glance_keystone_protocol }}://
+        {{- openstack_glance_keystone_hostname }}:
+        {{- openstack_glance_keystone_port }}/v3
     - section: keystone_authtoken
       option: project_domain_name
       value: default
@@ -98,18 +102,6 @@
     - section: paste_deploy
       option: flavor
       value: keystone
-  notify:
-    - Restart Glance API
-
-- name: Configure Glance registry database
-  ini_file:
-    dest: /etc/glance/glance-registry.conf
-    section: database
-    option: connection
-    value: '{{ openstack_glance_database_url }}'
-  notify:
-    - Sync Glance database
-    - Restart Glance registry
 
 - name: Configure Glance registry
   ini_file:
@@ -117,6 +109,8 @@
     section: '{{ item.section }}'
     option: '{{ item.option }}'
     value: '{{ item.value }}'
+  notify:
+    - Restart Glance registry
   with_items:
     - section: DEFAULT
       option: log_file
@@ -124,12 +118,21 @@
     - section: DEFAULT
       option: verbose
       value: True
+    - section: database
+      option: connection
+      value: '{{ openstack_glance_database_url }}'
     - section: keystone_authtoken
       option: identity_uri
-      value: '{{ openstack_glance_keystone_protocol }}://{{ openstack_glance_keystone_hostname }}:{{ openstack_glance_keystone_admin_port }}'
+      value: >-
+        {{- openstack_glance_keystone_protocol }}://
+        {{- openstack_glance_keystone_hostname }}:
+        {{- openstack_glance_keystone_admin_port }}
     - section: keystone_authtoken
       option: auth_uri
-      value: '{{ openstack_glance_keystone_protocol }}://{{ openstack_glance_keystone_hostname }}:{{ openstack_glance_keystone_port }}/v3'
+      value: >-
+        {{- openstack_glance_keystone_protocol }}://
+        {{- openstack_glance_keystone_hostname }}:
+        {{- openstack_glance_keystone_port }}/v3
     - section: keystone_authtoken
       option: admin_tenant_name
       value: service
@@ -151,5 +154,20 @@
     - section: glance_store
       option: default_store
       value: file
+
+- name: Get current Glance database version
+  command: 'glance-manage db_version'
+  always_run: True
+  become: True
+  become_user: 'glance'
+  changed_when: openstack_glance_manage_db_version.stdout|int != openstack_glance_database_schema_version
+  register: openstack_glance_manage_db_version
+
+- name: Migrate Glance database to desired version
+  command: 'glance-manage db_sync {{ openstack_glance_database_schema_version }}'
+  become: True
+  become_user: 'glance'
   notify:
+    - Restart Glance API
     - Restart Glance registry
+  when: openstack_glance_manage_db_version|changed
