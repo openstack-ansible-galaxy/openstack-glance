@@ -4,6 +4,74 @@
 
 - hosts: all
   become: True
+
+  pre_tasks:
+    - name: Set facts for mysql role on Debian based system
+      set_fact:
+        mysql_root_password: 'mysqlpassword'
+        mysql_bind_address: '0.0.0.0'
+        mysql_innodb_file_per_table: 'innodb_file_per_table'
+        mysql_daemon: 'mysql'
+        mysql_log_error: '/var/log/mysql/error.log'
+        mysql_pid_file: '/var/run/mysqld/mysqld.pid'
+        mysql_packages:
+          - 'mariadb-client'
+          - 'mariadb-server'
+          - 'python-mysqldb'
+        mysql_databases:
+          - name: 'keystone'
+          - name: 'glance'
+        mysql_users:
+          - name: 'keystone'
+            password: 'keystonepassword'
+            priv: 'keystone.*:ALL'
+            host: '%'
+          - name: 'keystone'
+            password: 'keystonepassword'
+            priv: 'keystone.*:ALL'
+            host: 'localhost'
+          - name: 'glance'
+            password: 'glancepassword'
+            priv: 'glance.*:ALL'
+            host: '%'
+          - name: 'glance'
+            password: 'glancepassword'
+            priv: 'glance.*:ALL'
+            host: 'localhost'
+      when: ansible_os_family == 'Debian'
+
+    - name: Set facts for mysql role on RedHat based system
+      set_fact:
+        mysql_root_password: 'mysqlpassword'
+        mysql_bind_address: '0.0.0.0'
+        mysql_innodb_file_per_table: 'innodb_file_per_table'
+        mysql_daemon: 'mariadb'
+        mysql_socket: '/var/lib/mysql/mysql.sock'
+        mysql_log_error: '/var/log/mariadb/mariadb.log'
+        mysql_syslog_tag: 'mariadb'
+        mysql_pid_file: '/var/run/mariadb/mariadb.pid'
+        mysql_databases:
+          - name: 'keystone'
+          - name: 'glance'
+        mysql_users:
+          - name: 'keystone'
+            password: 'keystonepassword'
+            priv: 'keystone.*:ALL'
+            host: '%'
+          - name: 'keystone'
+            password: 'keystonepassword'
+            priv: 'keystone.*:ALL'
+            host: 'localhost'
+          - name: 'glance'
+            password: 'glancepassword'
+            priv: 'glance.*:ALL'
+            host: '%'
+          - name: 'glance'
+            password: 'glancepassword'
+            priv: 'glance.*:ALL'
+            host: 'localhost'
+      when: ansible_os_family == 'RedHat'
+
   roles:
     - role: rabbitmq
       rabbitmq_plugins:
@@ -15,64 +83,6 @@
           password: 'guest'
 
     - role: mysql
-      mysql_root_password: 'mysqlpassword'
-      mysql_bind_address: 0.0.0.0
-      mysql_innodb_file_per_table: 'innodb_file_per_table'
-      mysql_packages:
-        - mariadb-client
-        - mariadb-server
-        - python-mysqldb
-      mysql_databases:
-        - name: 'keystone'
-        - name: 'glance'
-      mysql_users:
-        - name: 'keystone'
-          password: 'keystonepassword'
-          priv: 'keystone.*:ALL'
-          host: '%'
-        - name: 'keystone'
-          password: 'keystonepassword'
-          priv: 'keystone.*:ALL'
-          host: 'localhost'
-        - name: 'glance'
-          password: 'glancepassword'
-          priv: 'glance.*:ALL'
-          host: '%'
-        - name: 'glance'
-          password: 'glancepassword'
-          priv: 'glance.*:ALL'
-          host: 'localhost'
-      when: ansible_os_family == 'Debian'
-
-    - role: mysql
-      mysql_root_password: 'mysqlpassword'
-      mysql_bind_address: 0.0.0.0
-      mysql_innodb_file_per_table: 'innodb_file_per_table'
-      mysql_daemon: 'mariadb'
-      mysql_log_error: '/var/log/mariadb/mariadb.log'
-      mysql_syslog_tag: 'mariadb'
-      mysql_pid_file: '/var/run/mariadb/mariadb.pid'
-      mysql_databases:
-        - name: 'keystone'
-        - name: 'glance'
-      mysql_users:
-        - name: 'keystone'
-          password: 'keystonepassword'
-          priv: 'keystone.*:ALL'
-          host: '%'
-        - name: 'keystone'
-          password: 'keystonepassword'
-          priv: 'keystone.*:ALL'
-          host: 'localhost'
-        - name: 'glance'
-          password: 'glancepassword'
-          priv: 'glance.*:ALL'
-          host: '%'
-        - name: 'glance'
-          password: 'glancepassword'
-          priv: 'glance.*:ALL'
-          host: 'localhost'
-      when: ansible_os_family == 'RedHat'
 
     - role: openstack-keystone
       openstack_keystone_database_url: 'mysql+pymysql://keystone:keystonepassword@localhost/keystone'
