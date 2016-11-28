@@ -39,7 +39,6 @@ openstack_glance_demo_pass: glance_pass_default
 
 # Database
 openstack_glance_database_url: sqlite:////var/lib/glance/glance.sqlite
-openstack_glance_database_schema_version: 44
 
 # RabbitMQ
 openstack_glance_rabbit_hostname: localhost
