@@ -155,16 +155,26 @@
       option: default_store
       value: file
 
+- name: Get latest Glance database version
+  shell: >-
+    ls {{ openstack_glance_database_migration_repository }}
+    | grep '^[0-9]\{3\}_' | sort -n | tail -n 1 | awk -F '_' '{ print $1; }'
+  always_run: True
+  changed_when: False
+  register: openstack_glance_database_schema_version
+
 - name: Get current Glance database version
   command: 'glance-manage db_version'
   always_run: True
   become: True
   become_user: 'glance'
-  changed_when: openstack_glance_manage_db_version.stdout|int != openstack_glance_database_schema_version
+  changed_when: >-
+    openstack_glance_manage_db_version.stdout|int
+    != openstack_glance_database_schema_version.stdout|int
   register: openstack_glance_manage_db_version
 
 - name: Migrate Glance database to desired version
-  command: 'glance-manage db_sync {{ openstack_glance_database_schema_version }}'
+  command: 'glance-manage db_sync {{ openstack_glance_database_schema_version.stdout }}'
   become: True
   become_user: 'glance'
   notify:

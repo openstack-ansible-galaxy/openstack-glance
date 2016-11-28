@@ -21,10 +21,14 @@
   set_fact:
     openstack_glance_api_service: 'glance-api'
     openstack_glance_registry_service: 'glance-registry'
+    openstack_glance_database_migration_repository: >-
+      /usr/lib/python2.7/dist-packages/glance/db/sqlalchemy/migrate_repo/versions
   when: ansible_os_family == 'Debian'
 
 - name: Set service facts
   set_fact:
     openstack_glance_api_service: 'openstack-glance-api'
     openstack_glance_registry_service: 'openstack-glance-registry'
+    openstack_glance_database_migration_repository: >-
+      /usr/lib/python2.7/site-packages/glance/db/sqlalchemy/migrate_repo/versions
   when: ansible_os_family == 'RedHat'
