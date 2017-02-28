@@ -7,4 +7,3 @@
     persistent: yes
   with_items:
     - glance_api_can_network
-
